@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import models.Note;
 
 /**
  *
@@ -25,16 +26,27 @@ public class NoteServlet extends HttpServlet {
         // to read files
         BufferedReader br = new BufferedReader(new FileReader(new File(path)));
         
-        request.setAttribute("title", br);
+        String title = br.readLine();
+        String contents = br.readLine();
         
-        getServletContext().getRequestDispatcher("/WEB-INF/viewnote.jsp").forward(request, response);
+        Note note = new Note(title, contents);
+        request.setAttribute("note", note);
+                
+        String edit = request.getParameter("edit");
 
-    }
+        if (edit == null) {
+           getServletContext().getRequestDispatcher("/WEB-INF/viewnote.jsp").forward(request, response);
+        } else if(edit == ""){
+           getServletContext().getRequestDispatcher("/WEB-INF/editnote.jsp").forward(request, response);
+        }
+        
+       }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+       getServletContext().getRequestDispatcher("/WEB-INF/viewnote.jsp").forward(request, response);
+
     }
             
 
